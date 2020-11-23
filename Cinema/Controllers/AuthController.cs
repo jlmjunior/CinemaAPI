@@ -26,13 +26,13 @@ namespace Cinema.Controllers
             {
                 AuthDAO authDAO = new AuthDAO();
 
-                if (!authDAO.ExisteUsuario(cadastro.Username))
+                if (!authDAO.ExisteUsuario(cadastro.Usuario))
                 {
                     Services.Hash hash = new Services.Hash();
 
-                    string senhaMD5 = hash.GerarMD5($"{cadastro.Username}{cadastro.Senha}");
+                    string senhaMD5 = hash.GerarMD5($"{cadastro.Usuario}{cadastro.Senha}");
 
-                    authDAO.Cadastrar(cadastro.Username, senhaMD5);
+                    authDAO.Cadastrar(cadastro.Usuario, senhaMD5);
 
                     return Request.CreateResponse(HttpStatusCode.OK, $"mensagem: usuário cadastrado", "application/json");
                 }
