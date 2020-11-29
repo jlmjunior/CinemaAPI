@@ -16,7 +16,7 @@ namespace Cinema.Controllers
         {
             if (cadastro == null)
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound, $"mensagem: usuário vazio", "application/json");
+                return Request.CreateResponse(HttpStatusCode.NotFound, $"mensagem: usuário vazio");
             }
 
             try
@@ -31,15 +31,15 @@ namespace Cinema.Controllers
 
                     authDAO.Cadastrar(cadastro.Usuario, senhaMD5);
 
-                    return Request.CreateResponse(HttpStatusCode.OK, $"mensagem: usuário cadastrado", "application/json");
+                    return Request.CreateResponse(HttpStatusCode.OK, $"mensagem: usuário cadastrado");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, $"mensagem: {ex}", "application/json");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, $"mensagem: Erro inesperado");
             }
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, $"mensagem: usuário já existe", "application/json");
+            return Request.CreateResponse(HttpStatusCode.BadRequest, $"mensagem: usuário já existe");
         }
 
         [HttpPost]
@@ -61,7 +61,7 @@ namespace Cinema.Controllers
 
                 if (usuarioAutorizado)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, new { userInfo = new { user = login.Usuario } }, "application/json");
+                    return Request.CreateResponse(HttpStatusCode.OK, new { userInfo = new { user = login.Usuario } });
                 }
             }
             catch (Exception)

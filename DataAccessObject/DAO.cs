@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -53,6 +54,35 @@ namespace DataAccessObject
                         cmd.Connection = connection;
 
                         result = (int)cmd.ExecuteScalar();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public DataTable FillDataTable(SqlCommand command)
+        {
+            DataTable result = new DataTable();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_conn))
+                {
+                    connection.Open();
+
+                    using (SqlCommand cmd = command)
+                    {
+                        cmd.Connection = connection;
+
+                        using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                        {
+                            sda.Fill(result);
+                        }
                     }
                 }
             }
