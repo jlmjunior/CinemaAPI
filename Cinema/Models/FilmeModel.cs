@@ -10,9 +10,12 @@ namespace Cinema.Models
         public int Id { get; set; }
         public string Titulo { get; set; }
         public TimeSpan Duracao { get; set; }
+        public string Ano { get; set; }
         public string Sinopse { get; set; }
-        public string Link { get; set; }
+        public string LinkBackground { get; set; }
+        public string LinkCapa { get; set; }
         public decimal Nota { get; set; }
         public List<string> Generos { get; set; }
+        public List<SessaoModel> Sessoes { get; set; }
     }
 }

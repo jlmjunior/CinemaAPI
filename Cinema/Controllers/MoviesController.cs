@@ -6,9 +6,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Cinema.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class MoviesController : ApiController
     {
         [HttpGet]
@@ -25,10 +27,12 @@ namespace Cinema.Controllers
 
                 FilmeModel filme = movieDAO.GetMovie(value);
                 List<string> generos = movieDAO.GetGenres(value);
+                List<SessaoModel> sessoes = movieDAO.GetSessions(value);
 
                 if (filme != null)
                 {
-                    filme.Generos = generos;
+                    filme.Generos = generos.Count > 0 ? generos : null;
+                    filme.Sessoes = sessoes.Count > 0 ? sessoes : null;
 
                     return Request.CreateResponse(HttpStatusCode.OK, filme);
                 }
