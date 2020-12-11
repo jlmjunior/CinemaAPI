@@ -57,11 +57,11 @@ namespace Cinema.Controllers
 
                 string senhaMD5 = hash.GerarMD5($"{login.Usuario}{login.Senha}");
 
-                bool usuarioAutorizado = authDAO.ValidarLogin(login.Usuario, senhaMD5);
+                UsuarioModel usuario = authDAO.BuscarUsuario(login.Usuario, senhaMD5);
 
-                if (usuarioAutorizado)
+                if (usuario != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, new { userInfo = new { user = login.Usuario } });
+                    return Request.CreateResponse(HttpStatusCode.OK, new { userInfo = usuario });
                 }
             }
             catch (Exception)

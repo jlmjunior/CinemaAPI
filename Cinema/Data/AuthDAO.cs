@@ -15,7 +15,7 @@ namespace Cinema.Data
 
         public void Cadastrar(string usuario, string hashSenha)
         {
-            string query = "INSERT INTO usuarios (usuario, senha, data_criacao) VALUES (@usuario, @senha, GETDATE())";
+            string query = "INSERT INTO usuarios (usuario, senha, data_criacao, id_role) VALUES (@usuario, @senha, GETDATE(), 2)";
 
             SqlCommand cmd = new SqlCommand
             {
@@ -44,9 +44,9 @@ namespace Cinema.Data
             return (ExecuteScalar(cmd) > 0);
         }
 
-        public bool ValidarLogin(string usuario, string hashSenha)
+        public UsuarioModel BuscarUsuario(string usuario, string hashSenha)
         {
-            string query = "SELECT Count(id) FROM usuarios WHERE usuario = @usuario and senha = @senha";
+            string query = "SELECT usuario, token, id_role AS role FROM usuarios WHERE usuario = @usuario and senha = @senha";
 
             SqlCommand cmd = new SqlCommand
             {
@@ -57,7 +57,21 @@ namespace Cinema.Data
             cmd.Parameters.AddWithValue("@usuario", usuario);
             cmd.Parameters.AddWithValue("@senha", hashSenha);
 
-            return (ExecuteScalar(cmd) > 0);
+            DataTable dt = FillDataTable(cmd);
+
+            if (dt.Rows.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return new UsuarioModel
+                {
+                    Usuario = dt.Rows[0]["usuario"].ToString(),
+                    Token = dt.Rows[0]["token"] == DBNull.Value ? null : dt.Rows[0]["token"].ToString(),
+                    Role = (int)dt.Rows[0]["role"]
+                };
+            }
         }
     }
 }
