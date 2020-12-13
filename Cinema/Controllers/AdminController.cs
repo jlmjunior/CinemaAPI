@@ -55,6 +55,42 @@ namespace Cinema.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, new { sessions = sessoes });
         }
 
+        [HttpGet]
+        public HttpResponseMessage RetornarFilmes()
+        {
+            DataTable dt = adminDAO.BuscarFilmes();
+            var filmes = new object();
+
+            if (dt.Rows.Count > 0)
+            {
+                filmes = dt.AsEnumerable().Select(row => new
+                {
+                    Id = row.Field<int>("id"),
+                    Titulo = row.Field<string>("titulo")
+                }).ToList();
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, new { movies = filmes });
+        }
+
+        [HttpGet]
+        public HttpResponseMessage RetornarSalas()
+        {
+            DataTable dt = adminDAO.BuscarSalas();
+            var salas = new object();
+
+            if (dt.Rows.Count > 0)
+            {
+                salas = dt.AsEnumerable().Select(row => new
+                {
+                    Id = row.Field<int>("id"),
+                    Descricao = row.Field<string>("descricao")
+                }).ToList();
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, new { rooms = salas });
+        }
+
         [HttpDelete]
         public HttpResponseMessage DeletarUsuario(string usuario)
         {
@@ -88,6 +124,26 @@ namespace Cinema.Controllers
                 adminDAO.DeletarSessao(id);
 
                 return Request.CreateResponse(HttpStatusCode.OK, "Mensagem: sessão deletada");
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: Erro desconhecido");
+            }
+        }
+
+        [HttpPost]
+        public HttpResponseMessage CadastrarSessao(CadastroSessaoModel sessao)
+        {
+            if (sessao == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: valor inválido");
+            }
+
+            try
+            {
+                adminDAO.CadastrarSessao(sessao);
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Mensagem: sessão cadastrada");
             }
             catch (Exception)
             {

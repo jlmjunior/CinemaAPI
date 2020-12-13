@@ -63,7 +63,7 @@ namespace Cinema.Data
 
         public List<SessaoModel> GetSessions(int idFilme)
         {
-            string query = "SELECT id, id_sala, data_inicio FROM sessoes WHERE id_filme = @idFilme";
+            string query = "SELECT id, id_sala, data_inicio FROM sessoes WHERE id_filme = @idFilme ORDER BY data_inicio";
 
             SqlCommand cmd = new SqlCommand()
             {

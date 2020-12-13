@@ -68,5 +68,50 @@ namespace Cinema.Data
 
             ExecuteNonQuery(cmd);
         }
+
+        public void CadastrarSessao(CadastroSessaoModel sessao)
+        {
+            string query = "INSERT INTO sessoes (id_filme, id_sala, data_inicio, data_fim, data_criacao) " +
+                           "VALUES (@filme, @sala, @inicio, @fim, GETDATE())";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@filme", sessao.IdFilme);
+            cmd.Parameters.AddWithValue("@sala", sessao.IdSala);
+            cmd.Parameters.AddWithValue("@inicio", sessao.DataInicio);
+            cmd.Parameters.AddWithValue("@fim", sessao.DataFim);
+
+            ExecuteNonQuery(cmd);
+        }
+
+        public DataTable BuscarFilmes()
+        {
+            string query = "SELECT id, titulo FROM filmes";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            return FillDataTable(cmd);
+        }
+
+        public DataTable BuscarSalas()
+        {
+            string query = "SELECT id, descricao FROM salas";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            return FillDataTable(cmd);
+        }
     }
 }
