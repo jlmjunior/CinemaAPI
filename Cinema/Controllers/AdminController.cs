@@ -43,5 +43,25 @@ namespace Cinema.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, new { sessions = sessoes });
         }
+
+        [HttpDelete]
+        public HttpResponseMessage DeletarUsuario(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: valor inválido");
+            }
+
+            try
+            {
+                adminDAO.DeletarUsuario(usuario);
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Mensagem: usuário deletado");
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: Erro desconhecido");
+            }
+        }
     }
 }

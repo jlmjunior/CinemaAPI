@@ -59,5 +59,20 @@ namespace Cinema.Data
 
             return FillDataTable(cmd);
         }
+
+        public void DeletarUsuario(string usuario)
+        {
+            string query = "DELETE FROM usuarios WHERE usuario = @usuario";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@usuario", usuario);
+
+            ExecuteNonQuery(cmd);
+        }
     }
 }
