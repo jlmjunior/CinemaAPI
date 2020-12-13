@@ -15,7 +15,7 @@ namespace Cinema.Data
 
         public DataTable BuscarUsuarios()
         {
-            string query = "SELECT usuario, id_role, data_criacao FROM usuarios";
+            string query = "SELECT usuario, id_role, data_criacao FROM usuarios WHERE id_role <> 1";
 
             SqlCommand cmd = new SqlCommand
             {
@@ -28,7 +28,7 @@ namespace Cinema.Data
 
         public DataTable BuscarSessoes()
         {
-            string query = "SELECT s.id, f.titulo, s.id_sala, s.data_inicio FROM sessoes s JOIN filmes f ON f.id = s.id_filme";
+            string query = "SELECT s.id, f.titulo, s.id_sala, s.data_inicio FROM sessoes s JOIN filmes f ON f.id = s.id_filme ORDER BY s.data_inicio";
 
             SqlCommand cmd = new SqlCommand
             {
