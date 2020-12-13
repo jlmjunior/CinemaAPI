@@ -19,7 +19,18 @@ namespace Cinema.Controllers
         [HttpGet]
         public HttpResponseMessage RetornarUsuarios()
         {
-            List<UsuarioModel> usuarios = adminDAO.BuscarUsuarios();
+            DataTable dt = adminDAO.BuscarUsuarios();
+            var usuarios = new object();
+
+            if (dt.Rows.Count > 0)
+            {
+                usuarios = dt.AsEnumerable().Select(row => new
+                {
+                    Usuario = row.Field<string>("usuario"),
+                    Role = row.Field<int>("id_role"),
+                    DataCriacao = row.Field<DateTime>("data_criacao")
+                }).ToList();
+            }
 
             return Request.CreateResponse(HttpStatusCode.OK, new { users = usuarios });
         }
@@ -57,6 +68,26 @@ namespace Cinema.Controllers
                 adminDAO.DeletarUsuario(usuario);
 
                 return Request.CreateResponse(HttpStatusCode.OK, "Mensagem: usuário deletado");
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: Erro desconhecido");
+            }
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage DeletarSessao(int id)
+        {
+            if (id == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: valor inválido");
+            }
+
+            try
+            {
+                adminDAO.DeletarSessao(id);
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Mensagem: sessão deletada");
             }
             catch (Exception)
             {

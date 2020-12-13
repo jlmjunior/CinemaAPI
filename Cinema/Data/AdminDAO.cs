@@ -13,9 +13,9 @@ namespace Cinema.Data
     {
         public AdminDAO() : base(ConfigurationManager.ConnectionStrings["default"].ConnectionString) { }
 
-        public List<UsuarioModel> BuscarUsuarios()
+        public DataTable BuscarUsuarios()
         {
-            string query = "SELECT usuario, id_role FROM usuarios";
+            string query = "SELECT usuario, id_role, data_criacao FROM usuarios";
 
             SqlCommand cmd = new SqlCommand
             {
@@ -23,28 +23,7 @@ namespace Cinema.Data
                 CommandText = query
             };
 
-            DataTable dt = FillDataTable(cmd);
-
-            if (dt.Rows.Count == 0)
-            {
-                return null;
-            }
-            else
-            {
-                List<UsuarioModel> usuarios = new List<UsuarioModel>();
-
-                foreach (DataRow dr in dt.Rows)
-                {
-                    usuarios.Add(new UsuarioModel
-                    {
-                        Usuario = dr["usuario"].ToString(),
-                        Token = null,
-                        Role = (int)dr["id_role"]
-                    });
-                }
-
-                return usuarios;
-            }
+            return FillDataTable(cmd);
         }
 
         public DataTable BuscarSessoes()
@@ -71,6 +50,21 @@ namespace Cinema.Data
             };
 
             cmd.Parameters.AddWithValue("@usuario", usuario);
+
+            ExecuteNonQuery(cmd);
+        }
+
+        public void DeletarSessao(int id)
+        {
+            string query = "DELETE FROM sessoes WHERE id = @id";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@id", id);
 
             ExecuteNonQuery(cmd);
         }
