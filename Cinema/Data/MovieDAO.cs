@@ -148,7 +148,7 @@ namespace Cinema.Data
             ExecuteNonQuery(cmd);
         }
 
-        public MeuIngressoModel BuscarIngresso(string usuario)
+        public List<MeuIngressoModel> BuscarIngresso(string usuario)
         {
             string query = "SELECT i.id, a.id_sala, a.linha, a.coluna, s.data_inicio, f.titulo FROM ingressos i " +
                            "JOIN sessoes s ON s.id = i.id_sessao                                                " +
@@ -166,14 +166,14 @@ namespace Cinema.Data
 
             DataTable dt = FillDataTable(cmd);
 
-            MeuIngressoModel ingresso = dt.AsEnumerable().Select(row => new MeuIngressoModel
+            List<MeuIngressoModel> ingresso = dt.AsEnumerable().Select(row => new MeuIngressoModel
             {
                 IdSala = row.Field<int>("id_sala"),
                 Titulo = row.Field<string>("titulo"),
                 Linha = row.Field<string>("linha"),
                 Coluna = row.Field<int>("coluna"),
                 DtInicio = row.Field<DateTime>("data_inicio")
-            }).ToList().FirstOrDefault();
+            }).ToList();
 
             return ingresso;
         }

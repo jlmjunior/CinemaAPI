@@ -119,7 +119,7 @@ namespace Cinema.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage MeuIngresso([FromBody] string usuario)
+        public HttpResponseMessage MeuIngresso(UsuarioModel usuario)
         {
             if (usuario == null)
             {
@@ -128,7 +128,7 @@ namespace Cinema.Controllers
 
             try
             {
-                var ingresso = movieDAO.BuscarIngresso(usuario);
+                var ingresso = movieDAO.BuscarIngresso(usuario.Usuario);
 
                 return Request.CreateResponse(HttpStatusCode.OK, ingresso);
             }
