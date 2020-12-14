@@ -177,5 +177,29 @@ namespace Cinema.Data
 
             return ingresso;
         }
+
+        public SessaoModel BuscarSessao(int idSessao)
+        {
+            string query = "SELECT id, id_sala, data_inicio FROM sessoes WHERE id = @id";
+
+            SqlCommand cmd = new SqlCommand()
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@id", idSessao);
+
+            DataTable dt = FillDataTable(cmd);
+
+            SessaoModel sessao = dt.AsEnumerable().Select(row => new SessaoModel
+            {
+                Id = row.Field<int>("id"),
+                IdSala = row.Field<int>("id_sala"),
+                Horario = row.Field<DateTime>("data_inicio"),
+            }).ToList().FirstOrDefault();
+
+            return sessao;
+        }
     }
 }

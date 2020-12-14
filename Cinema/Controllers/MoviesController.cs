@@ -137,5 +137,25 @@ namespace Cinema.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
+
+        [HttpGet]
+        public HttpResponseMessage BuscarSessao(int id)
+        {
+            if (id == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+
+            try
+            {
+                var sessao = movieDAO.BuscarSessao(id);
+
+                return Request.CreateResponse(HttpStatusCode.OK, sessao);
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+        }
     }
 }
