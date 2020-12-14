@@ -147,5 +147,35 @@ namespace Cinema.Data
 
             ExecuteNonQuery(cmd);
         }
+
+        public MeuIngressoModel BuscarIngresso(string usuario)
+        {
+            string query = "SELECT i.id, a.id_sala, a.linha, a.coluna, s.data_inicio, f.titulo FROM ingressos i " +
+                           "JOIN sessoes s ON s.id = i.id_sessao                                                " +
+                           "JOIN assentos a ON a.id = i.id_assento                                              " +
+                           "JOIN filmes f ON f.id = s.id_filme                                                  " +
+                           "WHERE i.id_usuario = (SELECT id FROM usuarios WHERE usuario = @usuario)             ";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@usuario", usuario);
+
+            DataTable dt = FillDataTable(cmd);
+
+            MeuIngressoModel ingresso = dt.AsEnumerable().Select(row => new MeuIngressoModel
+            {
+                IdSala = row.Field<int>("id_sala"),
+                Titulo = row.Field<string>("titulo"),
+                Linha = row.Field<string>("linha"),
+                Coluna = row.Field<int>("coluna"),
+                DtInicio = row.Field<DateTime>("data_inicio")
+            }).ToList().FirstOrDefault();
+
+            return ingresso;
+        }
     }
 }

@@ -117,5 +117,25 @@ namespace Cinema.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
+
+        [HttpPost]
+        public HttpResponseMessage MeuIngresso([FromBody] string usuario)
+        {
+            if (usuario == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+
+            try
+            {
+                var ingresso = movieDAO.BuscarIngresso(usuario);
+
+                return Request.CreateResponse(HttpStatusCode.OK, ingresso);
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+        }
     }
 }
