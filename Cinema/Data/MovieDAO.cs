@@ -84,5 +84,68 @@ namespace Cinema.Data
 
             return sessoes;
         }
+
+        public List<AssentoModel> BuscarAssentos(int idSessao)
+        {
+            string query = "SELECT a.id, a.linha, a.coluna, a.bit_especial, i.id_assento ingresso FROM assentos a   " +
+                           "JOIN sessoes s ON s.id_sala = a.id_sala                                 " +
+                           "LEFT JOIN ingressos i ON i.id_assento = a.id AND i.id_sessao = s.id     " +
+                           "WHERE s.id = @id                                                        ";
+
+            SqlCommand cmd = new SqlCommand()
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@id", idSessao);
+
+            DataTable dt = FillDataTable(cmd);
+
+            List<AssentoModel> assentos = dt.AsEnumerable().Select(row => new AssentoModel
+            {
+                Id = row.Field<int>("id"),
+                Linha = row.Field<string>("linha"),
+                Coluna = row.Field<int>("coluna"),
+                Especial = row.Field<int>("bit_especial"),
+                Ocupado = row["ingresso"] != DBNull.Value
+            }).ToList();
+
+            return assentos;
+        }
+
+        public bool ExisteIngresso(int sessao, int assento)
+        {
+            string query = "SELECT Count(id) FROM ingressos WHERE id_sessao = @sessao AND id_assento = @assento";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@sessao", sessao);
+            cmd.Parameters.AddWithValue("@assento", assento);
+
+            return (ExecuteScalar(cmd) > 0);
+        }
+
+        public void ComprarIngresso(IngressoModel ingresso)
+        {
+            string query = "INSERT INTO ingressos (id_usuario, id_sessao, id_assento, data_criacao)                     " +
+                           "VALUES ((SELECT id FROM usuarios WHERE usuario = @usuario), @sessao, @assento, GETDATE())   ";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@usuario", ingresso.Usuario);
+            cmd.Parameters.AddWithValue("@sessao", ingresso.IdSessao);
+            cmd.Parameters.AddWithValue("@assento", ingresso.IdAssento);
+
+            ExecuteNonQuery(cmd);
+        }
     }
 }
