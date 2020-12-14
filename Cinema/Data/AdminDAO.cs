@@ -113,5 +113,20 @@ namespace Cinema.Data
 
             return FillDataTable(cmd);
         }
+
+        public bool HasAdminToken(string token)
+        {
+            string query = "SELECT Count(id) FROM usuarios WHERE token = @token AND id_role = 1";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@token", token);
+
+            return (ExecuteScalar(cmd) > 0);
+        }
     }
 }

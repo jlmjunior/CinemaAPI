@@ -73,5 +73,21 @@ namespace Cinema.Data
                 };
             }
         }
+
+        public void InserirToken(string usuario, string token)
+        {
+            string query = "UPDATE usuarios SET token = @token WHERE usuario = @usuario";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = query
+            };
+
+            cmd.Parameters.AddWithValue("@usuario", usuario);
+            cmd.Parameters.AddWithValue("@token", token);
+
+            ExecuteNonQuery(cmd);
+        }
     }
 }

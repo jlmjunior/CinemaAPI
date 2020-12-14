@@ -17,8 +17,13 @@ namespace Cinema.Controllers
         private readonly AdminDAO adminDAO = new AdminDAO();
 
         [HttpGet]
-        public HttpResponseMessage RetornarUsuarios()
+        public HttpResponseMessage RetornarUsuarios(string token)
         {
+            if (!adminDAO.HasAdminToken(token))
+            {
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+
             DataTable dt = adminDAO.BuscarUsuarios();
             var usuarios = new object();
 
@@ -36,8 +41,13 @@ namespace Cinema.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage RetornarSessoes()
+        public HttpResponseMessage RetornarSessoes(string token)
         {
+            if (!adminDAO.HasAdminToken(token))
+            {
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+
             DataTable dt = adminDAO.BuscarSessoes();
             var sessoes = new object();
 
@@ -92,8 +102,13 @@ namespace Cinema.Controllers
         }
 
         [HttpDelete]
-        public HttpResponseMessage DeletarUsuario(string usuario)
+        public HttpResponseMessage DeletarUsuario(string usuario, string token)
         {
+            if (!adminDAO.HasAdminToken(token))
+            {
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+
             if (string.IsNullOrWhiteSpace(usuario))
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: valor inválido");
@@ -112,8 +127,13 @@ namespace Cinema.Controllers
         }
 
         [HttpDelete]
-        public HttpResponseMessage DeletarSessao(int id)
+        public HttpResponseMessage DeletarSessao(int id, string token)
         {
+            if (!adminDAO.HasAdminToken(token))
+            {
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+
             if (id == 0)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: valor inválido");
@@ -132,8 +152,13 @@ namespace Cinema.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage CadastrarSessao(CadastroSessaoModel sessao)
+        public HttpResponseMessage CadastrarSessao(CadastroSessaoModel sessao, string token)
         {
+            if (!adminDAO.HasAdminToken(token))
+            {
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+
             if (sessao == null)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Mensagem: valor inválido");

@@ -61,6 +61,10 @@ namespace Cinema.Controllers
 
                 if (usuario != null)
                 {
+                    usuario.Token = hash.GerarMD5($"{login.Usuario}{login.Senha}{DateTime.Now}");
+
+                    authDAO.InserirToken(usuario.Usuario, usuario.Token);
+
                     return Request.CreateResponse(HttpStatusCode.OK, new { userInfo = usuario });
                 }
             }
